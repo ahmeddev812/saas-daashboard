@@ -1,131 +1,107 @@
-# ATLARIS — SaaS Analytics Dashboard
+# ATLARIS
 
-> "Carry your business. See everything."
+> **Carry your business. See everything.**
 
-ATLARIS is a complete, **frontend-only** SaaS analytics dashboard. It records customers,
-products, orders, revenue targets and team activity, and derives every metric shown in the
-UI from that state. There is **no backend, no database and no real payments** — all data
-lives in your browser's `localStorage`.
+A premium, local-first SaaS analytics dashboard that turns customers, products and orders into readable business signal — MRR, ARR, churn, LTV, revenue and goal insights — entirely in the browser.
+
+🔗 **Live demo:** https://saas-daashboard.vercel.app/
 
 ---
 
-## Stack
+## ✨ What is ATLARIS?
 
-| Layer      | Choice                                        |
-| ---------- | --------------------------------------------- |
-| Framework  | Next.js **16** (App Router, Turbopack)        |
-| UI         | React **19**, TypeScript **strict**           |
-| Styling    | Tailwind CSS **v4** (CSS-first config)        |
-| Motion     | framer-motion **13** (respects reduced motion)|
-| Charts     | recharts **3** (`ResponsiveContainer`)        |
-| Icons      | lucide-react                                  |
-| Theme      | next-themes (light/dark, persisted)           |
+ATLARIS is a **working analytics dashboard**, not a static mockup. You record customers, products and orders; ATLARIS derives every metric, chart and report from those same records. Change a price, refund an order or close a goal once — and every screen follows.
 
-## Getting started
+- **Local-first** — all data lives in your browser's `localStorage`. Nothing is sent to a server.
+- **Derived, never hard-coded** — MRR, ARR, churn, LTV, ARPU and growth are calculated from real state.
+- **Honest analytics** — when data is insufficient, ATLARIS shows an empty/manual state instead of inventing a number.
+- **Opt-in demo** — load ~90 days of sample data with one click, or start with a clean workspace.
 
-```bash
-npm install     # install dependencies
-npm run dev     # development server on http://localhost:3000
-npm run build   # production build (Turbopack + type checking)
-npm run start   # serve the production build
-npm run lint    # eslint (zero warnings is the target)
-```
+> ⚠️ **Security boundary:** Authentication is local/demo only. Credentials and data are stored on your device and are **not** production-grade. Do not reuse a real password.
 
-## Routes
+---
 
-| Route              | Purpose                                              |
-| ------------------ | ---------------------------------------------------- |
-| `/`                | Marketing landing page                               |
-| `/login` `/signup` | Local demo auth (browser only)                       |
-| `/onboarding`      | Workspace setup wizard                               |
-| `/dashboard`       | KPI cards, MRR chart, revenue target, activity feed  |
-| `/customers` `/customers/[id]` | List, CRUD, import/export and detail view |
-| `/products`        | Catalogue CRUD with archive/restore                  |
-| `/orders` `/orders/[id]` | Order workflow (pending → paid → fulfilled, refunds) |
-| `/revenue`         | Recognized revenue, targets, forecasts               |
-| `/analytics`       | Breakdowns by customer, product, status and channel  |
-| `/reports`         | Report templates + CSV / JSON export, print          |
-| `/team`            | Members, roles, invitations, activity log            |
-| `/settings`        | Profile, appearance, backup/restore, danger zone     |
-| `/search`          | Full-page search (also `⌘K` / `Ctrl+K` everywhere)   |
+## 🚀 Features
 
-Unknown URLs render a branded `404` (`src/app/not-found.tsx`); render errors surface a
-branded recovery screen (`src/app/error.tsx`).
+### Landing
+- Hero with tagline and animated dashboard preview
+- Bento feature grid, 3-step "How it works"
+- Testimonials, Free/Pro pricing (presentation only), FAQ, CTA
 
-## Demo data (opt-in only)
+### Auth & Onboarding
+- Local signup / login / logout
+- Password strength meter
+- Remember me (unchecked by default)
+- One-click **Demo User** with 90-day seed data
+- 4-step onboarding: name & business → industry, currency, fiscal year → primary goal → theme & targets
 
-Nothing is seeded silently. Sample data is created **only** when you ask for it:
+### Dashboard
+- Time-based greeting and business context
+- Live metric cards: **MRR, Active Customers, Orders, Revenue**
+- MRR growth chart (Recharts)
+- Revenue vs target progress
+- Recent orders, top customers, activity feed
+- Quick actions and meaningful empty states
 
-- Sign in with the demo account on `/login` ("Explore the demo workspace"), **or**
-- Press **Load demo data** on an empty dashboard.
+### Customers
+- Full CRUD with search, status/plan filters, tags
+- Bulk actions
+- Customer detail: profile, order history, MRR history, notes
+- CSV import / export
+- Delete confirmation and no-results states
 
-Demo credentials: `demo@atlaris.app` / `Demo!2026`
+### Products
+- Full CRUD: name, description, price, category, stock, status (`active | draft | archived`)
+- Historical order lines **retain captured prices** — history never rewrites itself
 
-The seed (`src/lib/seed.ts`) generates a deterministic ~90-day dataset: 16 customers,
-10 products, 64 orders (including refunds), team members and an activity feed — enough
-variation for the charts to be meaningful. A normal signup always starts clean, and the
-seed is never applied to a workspace that already contains records.
+### Orders
+- Full CRUD with customer selection
+- Multi-product line items (quantity + captured price)
+- Automatic line totals and order total
+- Workflow: `pending → paid → fulfilled`
+- `refunded` as a **terminal** state — excluded from recognized revenue
+- Filters (date, status, customer), receipt/invoice view
 
-## Architecture
+### Revenue Analytics
+- MRR, ARR, churn rate, LTV, ARPU
+- CAC via manual acquisition-cost input
+- Revenue by product / customer / period
+- Simple cohort analysis
+- Zero-denominator and insufficient-data handling
 
-```
-src/
-  app/          Routes, layouts, error.tsx, not-found.tsx, loading.tsx
-  components/   Feature components (dashboard, customers, orders, …) + ui/ kit
-  context/      BusinessDataProvider (single source of truth), AuthContext, ToastContext
-  hooks/        useBusinessData, useBusinessActions, useMounted/useWindowEvent
-  lib/          storage, calculations, dates, export, auth, seed, defaults, id
-  types/        Business domain model
-  data/         Static landing-page content
-```
+### Analytics & Reports
+- Date-range picker, revenue trends, customer growth, product performance
+- Conversion funnel: signup → trial → paid
+- Pre-built report templates
+- CSV and JSON export with date-stamped filenames
+- Print-friendly report view
 
-Rules the code follows:
+### Team, Settings & Search
+- Team list with `owner | admin | member` roles (UI/demo only) and activity log
+- Business profile, currency, timezone, fiscal year, theme
+- JSON export/import with validation and explicit replacement confirmation
+- Danger zone: safe reset of `atlaris_*` keys
+- Global `⌘K` / `Ctrl+K` command palette across customers, products and orders
 
-- **Single source of truth** — every screen reads `useBusiness()`; no local copies of metrics.
-- **Derived metrics** — `src/lib/calculations.ts` computes MRR, revenue, growth, funnels etc.
-  No number shown in the UI is hard-coded.
-- **All `localStorage` I/O** goes through `src/lib/storage.ts`, never during SSR, and every
-  read is wrapped in `try/catch` so corrupt data degrades to defaults instead of crashing.
-- **Reusable UI** — modals, tables, badges, toasts, skeletons and empty states come from
-  `src/components/ui`.
+---
 
-## Data, privacy and limits
+## 🧱 Tech Stack
 
-- Storage keys are namespaced `atlaris_*` (business, customers, products, orders, team,
-  activities, goals, settings, users).
-- **Reset Data** clears only `atlaris_*` keys — never other sites' storage.
-- **Export / Import** (Settings → Data & backup) writes/reads a JSON backup; imports are
-  pre-flight validated before anything is replaced.
-- Auth is a demo convenience only: no server session, no secure password storage. Never
-  use it to protect real data.
+| Technology | Purpose |
+|---|---|
+| **Next.js 16** (App Router) | Framework, routing, layouts |
+| **React 19** | UI and client state |
+| **TypeScript 5** (strict) | Type safety |
+| **Tailwind CSS v4** | Styling (`@theme` in `globals.css`) |
+| **framer-motion** | Animations |
+| **next-themes** | Light / dark / system theme |
+| **Recharts** | Charts |
+| **lucide-react** | Icons |
+| **localStorage** | Local persistence |
+| **Vercel** | Deployment |
 
-## Verification
+> No backend, no database, no real payments. This is a frontend/local-first product by design.
 
-Every phase of the build was verified with:
+---
 
-```bash
-npm run lint    # eslint — 0 errors, 0 warnings
-npm run build   # strict TypeScript + production build — 17 routes
-npm run start   # HTTP smoke: all routes 200, unknown routes 404
-```
-
-## Deploy on Vercel
-
-The project is a standard Next.js App Router app with no server-only APIs, so deployment
-is zero-config:
-
-```bash
-npm i -g vercel
-vercel          # preview
-vercel --prod   # production
-```
-
-Or push the repository to GitHub and import it in the Vercel dashboard — framework
-preset **Next.js**, no environment variables required. All data stays in the visitor's
-browser; deploying does not change the privacy model.
-
-## Specification
-
-Built to the ATLARIS specification (15 development phases, accessibility, responsive
-behaviour at 375/768/1024/1440, error/empty/loading states, demo seed, export/import,
-Definition of Done).
+## 📁 Project Structure
