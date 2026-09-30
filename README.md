@@ -90,24 +90,7 @@ Built on a **single source of truth** principle: every screen reads from the sam
 | **Storage** | `localStorage` (SSR-guarded) |
 | **Deployment** | [Vercel](https://vercel.com/) |
 
----
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** 20+
-- **npm** / **pnpm** / **yarn** / **bun**
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/ahmeddev812/saas-dashboard.git
-cd saas-dashboard
-
-# Install dependencies
-npm install
 
 # Start the development server
 npm run dev
